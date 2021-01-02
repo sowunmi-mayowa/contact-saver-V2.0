@@ -31,10 +31,17 @@ class ContactApp{
             <td> ${contact.name} </td>
             <td> ${contact.address} </td>
             <td> ${contact.phone} </td>
-            <td> <a href="#" class="btn btn-danger btn-sm">Delete</a></td>
+            <td> <a href="#" class="btn btn-danger btn-sm delete">Delete</a></td>
         `
         list.appendChild(tr);
     }
+
+    static deleteBook(el){
+        if (el.classList.contains('delete')) {
+            el.parentElement.parentElement.remove()
+        }
+    }
+
     static showAlert(message, classname){
         const div = document.createElement('div');
         div.className = `alert alert-${classname} text-center`;
@@ -43,6 +50,8 @@ class ContactApp{
 
         setTimeout(() => {div.remove()}, 3000)
     }
+
+    
     static clearFields(){
         document.querySelector('#name').value = '';
         document.querySelector('#address').value = '';
@@ -61,20 +70,23 @@ document.querySelector('form').addEventListener('submit', (e)=> {
 
     if (name =='' || address == '' || phone =='') {
         ContactApp.showAlert('pls fill all fields', 'danger')
-    }else{
-        
-    const contact = new Contact(name, address, phone);
-    console.log(contact)
-
-    ContactApp.addContacts(contact);
-
-    ContactApp.showAlert('Contact Saved Successfully', 'success')
-
-    ContactApp.clearFields()
     }
+    // else if(phone <= 10 && phone.length > 12){
+    //     ContactApp.showAlert('Please enter a valid phone number', 'danger')
+    // }
+    else{
+        const contact = new Contact(name, address, phone);
+        console.log(contact)
 
+        ContactApp.addContacts(contact);
+
+        ContactApp.showAlert('Contact Saved Successfully', 'success')
+
+        ContactApp.clearFields()
+    }
 })
 
 document.querySelector('#table-value').addEventListener('click', (e) => {
-    console.log(e.target)
+    ContactApp.deleteBook(e.target);
+
 });
