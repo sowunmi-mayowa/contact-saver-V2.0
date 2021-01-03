@@ -8,21 +8,11 @@ class Contact{
 
 class ContactApp{
     static displayContacts(){
-        const storedContact = [
-            {
-                name: 'mayowa',
-                address: 'cario, Egypt',
-                phone: '09032073275'
-            },
-            {
-                name: 'mayowa',
-                address: 'cario, Egypt',
-                phone: '09032073275'
-            }
-        ];
-        const contacts = storedContact
+        const contacts = Store.getContacts();
 
-        contacts.forEach((contact) => ContactApp.addContacts(contact))
+    contacts.forEach(function(contact) {
+        ContactApp.addContacts(contact)
+    });
     }
     static addContacts(contact){
         const list = document.querySelector("#table-value");
@@ -59,6 +49,36 @@ class ContactApp{
     }
 }
 
+class Store{
+    static getContacts(){
+        let contacts;
+        if (localStorage.getItem('contacts') === null) {
+            contacts = [];
+        }else{
+            contacts = JSON.parse(localStorage.getItem('contacts'));
+        }
+        return contacts
+    }
+
+   static addBooks(contact){
+       const contacts = Store.getContacts();
+       contacts.push(contact);
+       localStorage.setItem('contacts', JSON.stringify(contacts))
+   }
+
+    static removeBook(phone){
+        const contacts  =Store.getContacts();
+
+        contacts.forEach((contact, index) => {
+            if (contact.phone === phone) {
+                contacts.splice(index, 1);
+            }
+        });
+        
+        localStorage.setItem(contacts, JSON.stringify(contacts))
+    }
+}
+
 document.addEventListener('DOMContentLoaded', ContactApp.displayContacts)
 
 document.querySelector('form').addEventListener('submit', (e)=> {
@@ -79,7 +99,7 @@ document.querySelector('form').addEventListener('submit', (e)=> {
         console.log(contact)
 
         ContactApp.addContacts(contact);
-
+        Store.addContacts(contact)
         ContactApp.showAlert('Contact Saved Successfully', 'success')
 
         ContactApp.clearFields()
